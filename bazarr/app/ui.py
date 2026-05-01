@@ -193,6 +193,13 @@ def _resolve_and_validate(url_str):
     if not hostname:
         raise ValueError("No hostname in URL")
     port = parsed.port or (443 if parsed.scheme == 'https' else 80)
+    try:
+        # Check if this is a plain IP
+        ipaddress.ip_address(hostname)
+        return hostname, hostname, parsed
+    except ValueError:
+        # This is not a plain IP, continue resolving with DNS
+        pass
     addrs = socket.getaddrinfo(hostname, port)
     if not addrs:
         raise ValueError("DNS resolution returned no results")
