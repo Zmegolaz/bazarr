@@ -193,6 +193,8 @@ def _resolve_and_validate(url_str):
     if not hostname:
         raise ValueError("No hostname in URL")
     port = parsed.port or (443 if parsed.scheme == 'https' else 80)
+    if hostname == "localhost":
+        return hostname, hostname, parsed
     try:
         # Check if this is a plain IP
         ipaddress.ip_address(hostname)
